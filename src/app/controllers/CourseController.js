@@ -1,3 +1,5 @@
+const { render } = require("node-sass");
+const { find } = require("../models/Course");
 const Course = require("../models/Course");
 
 class CourseController {
@@ -25,6 +27,26 @@ class CourseController {
             .save()
             .then(() => res.redirect("/"))
             .catch((error) => {});
+    }
+
+    edit(req, res, next) {
+        Course.findById(req.params.id)
+            .lean()
+            .then((course) => res.render("courses/edit", { course }))
+            .catch(next);
+    }
+
+    // update(req, res, next) {
+    //     Course.updateOne({ _id: req.params.id }, req.body)
+    //         .lean()
+    //         .then(() => res.redirect("/me/stored/courses"))
+    //         .catch(next);
+    // }
+
+    update(req, res, next) {
+        Course.updateOne({ _id: req.params.id }, req.body)
+            .then(() => res.redirect("/me/stored/courses"))
+            .catch(next);
     }
 }
 
