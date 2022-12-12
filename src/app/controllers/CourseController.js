@@ -1,5 +1,3 @@
-const { render } = require("node-sass");
-const { find } = require("../models/Course");
 const Course = require("../models/Course");
 
 class CourseController {
@@ -21,12 +19,14 @@ class CourseController {
 
     store(req, res, next) {
         const formData = req.body;
-        formData.image = `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
+        formData.image =
+            `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
         const course = new Course(formData);
+        console.log(course);
         course
             .save()
             .then(() => res.redirect("/"))
-            .catch((error) => {});
+            .catch(next);
     }
 
     edit(req, res, next) {
@@ -42,10 +42,15 @@ class CourseController {
     //         .then(() => res.redirect("/me/stored/courses"))
     //         .catch(next);
     // }
-
     update(req, res, next) {
         Course.updateOne({ _id: req.params.id }, req.body)
             .then(() => res.redirect("/me/stored/courses"))
+            .catch(next);
+    }
+    // [DELETE] /courses/:id
+    destroy(req, res, next) {
+        Course.deleteOne({ _id: req.params.id })
+            .then(() => res.redirect("back"))
             .catch(next);
     }
 }
